@@ -1,0 +1,9 @@
+---
+applications:
+  - name: trvcloud-intranet
+    memory: 256M
+    instances: 1
+    buildpacks:
+      - python_buildpack
+    env:
+      FLASK_ENV: production
