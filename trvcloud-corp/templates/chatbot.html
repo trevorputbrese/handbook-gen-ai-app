@@ -61,23 +61,63 @@
   
   <!-- JavaScript -->
   <script>
+    // Helper function to load chat history from localStorage
+    function loadChatHistory() {
+      const history = localStorage.getItem('chatHistory');
+      if (history) {
+        return JSON.parse(history);
+      }
+      return [];
+    }
+  
+    // Helper function to save chat history to localStorage
+    function saveChatHistory(history) {
+      localStorage.setItem('chatHistory', JSON.stringify(history));
+    }
+  
+    // Helper function to add a message to the chat window and update history
+    function addMessage(role, text) {
+      const chatWindow = document.getElementById('chat-window');
+  
+      // Create a new message element
+      const messageElem = document.createElement('div');
+      messageElem.className = 'message ' + role;
+      // Prefix with "You:" for user messages and "Bot:" for bot messages.
+      messageElem.innerText = (role === 'user' ? 'You: ' : 'Bot: ') + text;
+      chatWindow.appendChild(messageElem);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+  
+      // Update the localStorage chat history
+      let history = loadChatHistory();
+      history.push({ role: role, text: text });
+      saveChatHistory(history);
+    }
+  
+    // On page load, restore the chat history
+    document.addEventListener('DOMContentLoaded', function() {
+      const chatWindow = document.getElementById('chat-window');
+      const history = loadChatHistory();
+      history.forEach(msg => {
+        const messageElem = document.createElement('div');
+        messageElem.className = 'message ' + msg.role;
+        messageElem.innerText = (msg.role === 'user' ? 'You: ' : 'Bot: ') + msg.text;
+        chatWindow.appendChild(messageElem);
+      });
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    });
+  
     document.getElementById('chat-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const inputElem = document.getElementById('chat-input');
       const message = inputElem.value.trim();
       if (!message) return;
-      
-      // Append user message to chat window
-      const chatWindow = document.getElementById('chat-window');
-      const userMessageElem = document.createElement('div');
-      userMessageElem.className = 'message user';
-      userMessageElem.innerText = "You: " + message;
-      chatWindow.appendChild(userMessageElem);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+  
+      // Add user's message to chat window and localStorage
+      addMessage('user', message);
       
       // Clear the input field
       inputElem.value = '';
-      
+  
       // Send the message to our Flask chat API endpoint
       fetch('{{ url_for("api_chat") }}', {
         method: 'POST',
@@ -86,22 +126,16 @@
       })
       .then(response => response.json())
       .then(data => {
-          const botMessageElem = document.createElement('div');
-          botMessageElem.className = 'message bot';
-          // Assuming the response contains a key 'response' with the bot's reply
-          botMessageElem.innerText = "Bot: " + (data.response || JSON.stringify(data));
-          chatWindow.appendChild(botMessageElem);
-          chatWindow.scrollTop = chatWindow.scrollHeight;
+          // Assume the response contains a key 'response' with the bot's reply
+          const botReply = data.response || JSON.stringify(data);
+          addMessage('bot', botReply);
       })
       .catch(error => {
-          const errorElem = document.createElement('div');
-          errorElem.className = 'message bot';
-          errorElem.innerText = "Bot: Error: " + error;
-          chatWindow.appendChild(errorElem);
-          chatWindow.scrollTop = chatWindow.scrollHeight;
+          addMessage('bot', 'Error: ' + error);
       });
     });
   </script>
+  
   
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
