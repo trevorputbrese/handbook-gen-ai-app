@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HANDBOOK_FILE = os.path.join(BASE_DIR, 'handbook.md')
 
 # Local embedding API endpoint (update if needed)
-EMBEDDING_ENDPOINT = os.environ.get("EMBEDDING_ENDPOINT", "http://localhost:11434/api/embeddings")
+EMBEDDING_ENDPOINT = os.environ.get("EMBEDDING_ENDPOINT", "http://localhost:11435/api/embeddings")
 
 # Database connection details (set these as environment variables in production)
 DB_HOST = os.environ.get("DB_HOST", "127.0.0.1")
@@ -146,18 +146,19 @@ def api_chat():
     if not user_message:
         return {"error": "No message provided"}, 400
 
-    # Build the payload required by the Ollama API
+    # Build the payload with the necessary parameters
     payload = {
         "model": "gemma2:2b",
-        "prompt": user_message
+        "prompt": user_message,
+        "stream": False
     }
-    headers = {"Content-Type": "application/json"}
     
-    # Call the Ollama API running locally
-    ollama_response = requests.post("http://localhost:11434/api/chat", json=payload, headers=headers)
+    print("Sending payload to Ollama API:", payload)
+    # Call the correct endpoint without " -d" in the URL.
+    ollama_response = requests.post("http://localhost:11434/api/generate", json=payload)
+    print("Ollama API response:", ollama_response.status_code, ollama_response.text)
     
     if ollama_response.status_code == 200:
-        # Assume the response JSON contains a key "response" with the bot's reply.
         return ollama_response.json(), 200
     else:
         return {"error": "Failed to get response from Ollama", "details": ollama_response.text}, 500
