@@ -146,15 +146,22 @@ def api_chat():
     if not user_message:
         return {"error": "No message provided"}, 400
 
-    # Build the payload with the necessary parameters
+    # Retrieve relevant context from the handbook using the retrieval function.
+    context = retrieve_context(user_message, top_n=5)
+    print("Retrieved context:", context)
+    
+    # Combine the context and the user query to build an augmented prompt.
+    # You can tweak the format as needed.
+    full_prompt = f"Context:\n{context}\n\nUser Query: {user_message}\n\nAnswer based on the above context:"
+    
+    # Build the payload for the gemma2:2b model.
     payload = {
         "model": "gemma2:2b",
-        "prompt": user_message,
+        "prompt": full_prompt,
         "stream": False
     }
     
     print("Sending payload to Ollama API:", payload)
-    # Call the correct endpoint without " -d" in the URL.
     ollama_response = requests.post("http://localhost:11434/api/generate", json=payload)
     print("Ollama API response:", ollama_response.status_code, ollama_response.text)
     
@@ -162,6 +169,45 @@ def api_chat():
         return ollama_response.json(), 200
     else:
         return {"error": "Failed to get response from Ollama", "details": ollama_response.text}, 500
+
+
+
+
+def retrieve_context(query, top_n=5):
+    """
+    Given a user query, compute its embedding and retrieve the top_n most similar
+    handbook chunks from the database.
+    """
+    # Compute embedding for the query using your existing embedding function.
+    query_embedding = get_embedding(query)
+    
+    # Connect to the Postgres database.
+    conn = psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS
+    )
+    cur = conn.cursor()
+    
+    # Use PGVector's similarity operator (<->) to retrieve the most similar chunks.
+    # Adjust the SQL if needed based on your PGVector setup.
+
+    cur.execute("""
+        SELECT chunk_text 
+        FROM handbook_chunks 
+        ORDER BY embedding <-> (%s)::vector
+        LIMIT %s;
+    """, (query_embedding, top_n))
+    
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    # Concatenate the retrieved chunks into one context string.
+    context = "\n\n".join(row[0] for row in rows)
+    print(f"retrieve_context: Retrieved {len(rows)} chunks.")
+    return context
 
 
 
