@@ -1,10 +1,15 @@
 ---
 applications:
-  - name: trvcloud-intranet
+  - name: trvcloud-handbook-genai
     memory: 256M
     instances: 1
     buildpacks:
       - python_buildpack
-    command: python app.py
+    # command: python app.py
     env:
       FLASK_ENV: production
+    services:
+    - postgres
+    - gemma2
+    - nomic
+
