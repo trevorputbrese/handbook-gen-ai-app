@@ -3,4 +3,5 @@ Markdown
 gunicorn
 psycopg2-binary
 cfenv
+requests
 

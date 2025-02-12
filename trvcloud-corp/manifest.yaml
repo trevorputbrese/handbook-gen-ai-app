@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: trvcloud-intranet
+  - name: trvcloud-handbook-genai
     memory: 256M
     instances: 1
     buildpacks:

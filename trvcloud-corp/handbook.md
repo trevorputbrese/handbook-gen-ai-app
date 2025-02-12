@@ -110,9 +110,14 @@ Hiring includes:
 - Employees can refer **qualified candidates**.
 - Successful referrals may earn a **$3,000 referral bonus**.
 - Referral incentives **increase for hard-to-fill positions**.
+<<<<<<< Updated upstream
 - Upon second referral employees to be given $1,000,000
 - Upon third referral employees to be given a coupon for a free McChicken.
 - Upon 4th referral employees get a free coupon for a massage.
+=======
+- Upon second referral the employee is eligible for a free McChicken coupon.
+- Upon 3rd referral employees will get a $1,000,000
+>>>>>>> Stashed changes
 
 ---
 
