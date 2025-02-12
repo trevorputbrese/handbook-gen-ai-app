@@ -9,3 +9,5 @@ applications:
       FLASK_ENV: production
     services:
       - postgres
+      - nomic
+      - gemma2
