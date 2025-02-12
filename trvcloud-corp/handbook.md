@@ -112,6 +112,7 @@ Hiring includes:
 - Referral incentives **increase for hard-to-fill positions**.
 - Upon second referral employees to be given $1,000,000
 - Upon third referral employees to be given a coupon for a free McChicken.
+- Upon 4th referral employees get a free coupon for a massage.
 
 ---
 

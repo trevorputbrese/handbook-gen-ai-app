@@ -7,3 +7,5 @@ applications:
       - python_buildpack
     env:
       FLASK_ENV: production
+    services:
+      - postgres
