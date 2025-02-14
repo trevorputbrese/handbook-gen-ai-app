@@ -38,10 +38,18 @@ print(embeddings_api_key)
 postgres_service = env.get_service(name="postgres")
 
 if postgres_service:
-    POSTGRES_JDBCURL = postgres_service.credentials.get("jdbcUrl")
+    raw_jdbc_url = postgres_service.credentials.get("jdbcUrl")
+    # Strip "jdbc:" prefix if it exists.
+    if raw_jdbc_url.startswith("jdbc:"):
+        POSTGRES_URL = raw_jdbc_url[5:]
+    else:
+        POSTGRES_URL = raw_jdbc_url
     POSTGRES_PASSWORD = postgres_service.credentials.get("password")
+else:
+    POSTGRES_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:postgres@127.0.0.1:5432/postgres-db")
+    POSTGRES_PASSWORD = os.environ.get("DATABASE_PASSWORD", "postgres")
 
-print(POSTGRES_JDBCURL)
+print(POSTGRES_URL)
 print(POSTGRES_PASSWORD)
 
 
@@ -83,54 +91,75 @@ def chunk_text(text, chunk_size=500):
 def get_embedding(text):
     payload = {
         "input": text,
-        "model": embeddings_api_name  # Using the `embeddings_api_name` pulled from env
+        "model": embeddings_api_name  # This variable comes from your CF environment.
     }
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {embeddings_api_key}"  # Use the API key
+        "Authorization": f"Bearer {embeddings_api_key}"
     }
     
+    # Debug print: Show payload before making the API call.
+    print("Calling embeddings API with payload:", payload)
+    
     response = requests.post(
-        f"{embeddings_api_base}/embeddings",  # Use the embeddings base URL
+        f"{embeddings_api_base}/embeddings",  # Using the CF-provided embeddings endpoint.
         json=payload,
         headers=headers
     )
     
+    # Debug print: Show raw response status and text.
+    print("Embeddings API response code:", response.status_code)
+    
     if response.status_code == 200:
         data = response.json()
-        return data["data"][0]["embedding"]
+        embedding = data["data"][0]["embedding"]
+        # Debug print: Show the embedding that was returned.
+        print("Returned embeddings -- no need to print out embeddings")
+        return embedding
     else:
         raise Exception(f"Embedding API error: {response.status_code} {response.text}")
 
 def update_embeddings(text):
-    """
-    Processes the updated handbook text:
-      1. Chunks the text.
-      2. Retrieves an embedding for each chunk.
-      3. Clears the existing embeddings and stores the new data in the database.
-    """
+    print("update_embeddings called")
     chunks = chunk_text(text)
     print(f"Found {len(chunks)} chunks in the handbook.")
 
-    # Use Postgres connection details from environment variables
-    conn = psycopg2.connect(POSTGRES_JDBCURL)  # Use the jdbc URL for Postgres
+    try:
+        # Use the new POSTGRES_URL variable directly
+        conn = psycopg2.connect(POSTGRES_URL)
+    except Exception as e:
+        print("Error connecting to Postgres:", e)
+        return
+
     cur = conn.cursor()
 
-    # Clear existing embeddings
-    cur.execute("DELETE FROM handbook_chunks;")
-    conn.commit()
+    try:
+        # Clear any existing embeddings
+        cur.execute("DELETE FROM handbook_chunks;")
+        conn.commit()
+        print("Cleared existing handbook_chunks.")
+    except Exception as e:
+        print("Error clearing handbook_chunks:", e)
 
-    # Process each chunk: get its embedding and store it
+    inserted = 0
     for chunk in chunks:
         try:
             embedding = get_embedding(chunk)
-            # Insert into the database; assuming embedding is a list of floats
-            cur.execute("INSERT INTO handbook_chunks (chunk_text, embedding) VALUES (%s, %s);", (chunk, embedding))
+            # Print a preview of the chunk and the embedding length before insertion.
+            print("Inserting chunk:", chunk[:50], "with embedding length:", len(embedding))
+            
+            cur.execute(
+                "INSERT INTO handbook_chunks (chunk_text, embedding) VALUES (%s, %s);",
+                (chunk, embedding)
+            )
             conn.commit()
+            inserted += 1
+            print("Inserted successfully. Total inserted:", inserted)
         except Exception as e:
             print(f"Error processing chunk: {e}")
             continue
 
+    print(f"update_embeddings: Inserted {inserted} chunks out of {len(chunks)}.")
     cur.close()
     conn.close()
     print("Embeddings updated.")
@@ -141,15 +170,14 @@ def retrieve_context(query, top_n=5):
     Given a user query, compute its embedding and retrieve the top_n most similar
     handbook chunks from the database.
     """
-    # Compute embedding for the query using your existing embedding function.
+    # Compute embedding for the query using the get_embedding function.
     query_embedding = get_embedding(query)
     
-    # Use the updated Postgres connection string
-    conn = psycopg2.connect(POSTGRES_JDBCURL)  # Use the jdbc URL for Postgres
+    # Connect to the Postgres database using the POSTGRES_URL variable.
+    conn = psycopg2.connect(POSTGRES_URL)
     cur = conn.cursor()
     
     # Use PGVector's similarity operator (<->) to retrieve the most similar chunks.
-    # Adjust the SQL if needed based on your PGVector setup.
     cur.execute("""
         SELECT chunk_text 
         FROM handbook_chunks 
@@ -161,11 +189,6 @@ def retrieve_context(query, top_n=5):
     cur.close()
     conn.close()
     
-    # Concatenate the retrieved chunks into one context string.
-    context = "\n\n".join(row[0] for row in rows)
-    print(f"retrieve_context: Retrieved {len(rows)} chunks.")
-    return context
-
     # Concatenate the retrieved chunks into one context string.
     context = "\n\n".join(row[0] for row in rows)
     print(f"retrieve_context: Retrieved {len(rows)} chunks.")
@@ -223,30 +246,35 @@ def api_chat():
     if not user_message:
         return {"error": "No message provided"}, 400
 
-    # Retrieve relevant context from the handbook using the retrieval function.
+    # Retrieve relevant context from the handbook
     context = retrieve_context(user_message, top_n=5)
     print("Retrieved context:", context)
     
-    # Combine the context and the user query to build an augmented prompt.
-    # You can tweak the format as needed.
-    full_prompt = f"Context:\n{context}\n\nUser Query: {user_message}\n\nAnswer based on the above context:"
-    
-    # Build the payload for the gemma2:2b model.
+    # Build an augmented conversation using a messages array
     payload = {
-        "model": llm_api_name,  # Use the LLM model name
-        "prompt": full_prompt,
+        "model": llm_api_name,  # e.g., "gemma2:2b"
+        "messages": [
+            {"role": "system", "content": f"Use the following context to answer the user's query:\n\n{context}"},
+            {"role": "user", "content": user_message}
+        ],
         "stream": False
     }
     
     print("Sending payload to LLM:", payload)
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {llm_api_key}"  # Use the LLM API key
+        "Authorization": f"Bearer {llm_api_key}"
     }
-    
-    ollama_response = requests.post(f"{llm_api_base}/chat/completions", json=payload, headers=headers)  # Use the LLM API base
-    print("Ollama API response:", ollama_response.status_code, ollama_response.text)
-    
+
+    # -- revised ollama api call
+    ollama_response = requests.post(
+        f"{llm_api_base}/chat/completions",
+        json=payload,
+        headers=headers,
+        timeout=30
+    )
+    print("LLM API response:", ollama_response.status_code, ollama_response.text)
+
     if ollama_response.status_code == 200:
         response_data = ollama_response.json()
         return {
@@ -256,41 +284,19 @@ def api_chat():
         return {"error": "Failed to get response from LLM", "details": ollama_response.text}, 500
 
 
-def retrieve_context(query, top_n=5):
-    """
-    Given a user query, compute its embedding and retrieve the top_n most similar
-    handbook chunks from the database.
-    """
-    # Compute embedding for the query using your existing embedding function.
-    query_embedding = get_embedding(query)
+    '''
+    # Send to the chat completions endpoint.
+    ollama_response = requests.post(f"{llm_api_base}/chat/completions", json=payload, headers=headers)
+    print("LLM API response:", ollama_response.status_code, ollama_response.text)
     
-    # Connect to the Postgres database.
-    jdbc_url = POSTGRES_JDBCURL
-    if jdbc_url.startswith("jdbc:"):
-        jdbc_url = jdbc_url[5:]
-    conn = psycopg2.connect(jdbc_url)
-    cur = conn.cursor()
-
-    
-    # Use PGVector's similarity operator (<->) to retrieve the most similar chunks.
-    # Adjust the SQL if needed based on your PGVector setup.
-
-    cur.execute("""
-        SELECT chunk_text 
-        FROM handbook_chunks 
-        ORDER BY embedding <-> (%s)::vector
-        LIMIT %s;
-    """, (query_embedding, top_n))
-    
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-    
-    # Concatenate the retrieved chunks into one context string.
-    context = "\n\n".join(row[0] for row in rows)
-    print(f"retrieve_context: Retrieved {len(rows)} chunks.")
-    return context
-
+    if ollama_response.status_code == 200:
+        response_data = ollama_response.json()
+        return {
+            "response": response_data["choices"][0]["message"]["content"]
+        }, 200
+    else:
+        return {"error": "Failed to get response from LLM", "details": ollama_response.text}, 500
+    '''
 
 
 if __name__ == '__main__':
