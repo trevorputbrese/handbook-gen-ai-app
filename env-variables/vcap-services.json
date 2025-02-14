@@ -1,1 +1,54 @@
-{"genai":[{"label":"genai","provider":null,"plan":"gemma2:2b","name":"gemma2","tags":["genai","llm"],"instance_guid":"117ec8b6-7df3-4bb8-b48d-3ad4b7bcac40","instance_name":"gemma2","binding_guid":"72dc6084-03bc-41a9-ad63-1879d13c8f2c","binding_name":null,"credentials":{"api_base":"https://genai-proxy.sys.dhaka.cf-app.com/82f49794-5957-440c-8156-4dfc0ff23e99/openai","api_key":"eyJhbGciOiJIUzI1NiJ9.eyJrZXlfaWQiOiIxNGQxYjBlNS1kMTZjLTRlZjMtOGRhZS1jYzYxMDhlODk3ZjQiLCJjbGllbnRfaWQiOiIyMGNkMDliZC1hOTEzLTRkZjMtYWJlNC0yOTJhMjQyMDMyMGYiLCJlbmRwb2ludCI6IjgyZjQ5Nzk0LTU5NTctNDQwYy04MTU2LTRkZmMwZmYyM2U5OSIsInN1YiI6IjcyZGM2MDg0LTAzYmMtNDFhOS1hZDYzLTE4NzlkMTNjOGYyYyIsImlhdCI6MTczOTQ5NzgzNH0.yr-6lDn6yPR9vpOVfPu_vqJVSfXzeqfyivAaUGp-Fhc","model_aliases":null,"model_capabilities":["chat"],"model_name":"gemma2:2b"},"syslog_drain_url":null,"volume_mounts":[]},{"label":"genai","provider":null,"plan":"nomic-embed-text","name":"nomic","tags":["genai","llm"],"instance_guid":"d21efd82-9f1c-45eb-a80a-e327db9e9604","instance_name":"nomic","binding_guid":"5d32ca81-0e34-42a8-ae17-ae08b99875b6","binding_name":null,"credentials":{"api_base":"https://genai-proxy.sys.dhaka.cf-app.com/6dda8877-6b0f-43a9-8191-bad4c239f564/openai","api_key":"eyJhbGciOiJIUzI1NiJ9.eyJrZXlfaWQiOiIyMjcxYTZlZi02YzI2LTRjYWUtYTQzNy03NTY1NGRlN2U3OTciLCJjbGllbnRfaWQiOiIxOTE2ZjFmNC0wZTBlLTQ0ZmYtOWM0Yi1iYTFhNGNmZDlmNzEiLCJlbmRwb2ludCI6IjZkZGE4ODc3LTZiMGYtNDNhOS04MTkxLWJhZDRjMjM5ZjU2NCIsInN1YiI6IjVkMzJjYTgxLTBlMzQtNDJhOC1hZTE3LWFlMDhiOTk4NzViNiIsImlhdCI6MTczOTQ5Nzg1OX0.QXiIiFTBtDHJA58eO_PVoH-nX80Cy_Fnemy0XuLGGt4","model_aliases":null,"model_capabilities":["embedding"],"model_name":"nomic-embed-text"},"syslog_drain_url":null,"volume_mounts":[]}]}
+{
+    "genai": [
+      {
+        "label": "genai",
+        "provider": null,
+        "plan": "gemma2:2b",
+        "name": "gemma2",
+        "tags": [
+          "genai",
+          "llm"
+        ],
+        "instance_guid": "117ec8b6-7df3-4bb8-b48d-3ad4b7bcac40",
+        "instance_name": "gemma2",
+        "binding_guid": "72dc6084-03bc-41a9-ad63-1879d13c8f2c",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.dhaka.cf-app.com/82f49794-5957-440c-8156-4dfc0ff23e99/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9.eyJrZXlfaWQiOiIxNGQxYjBlNS1kMTZjLTRlZjMtOGRhZS1jYzYxMDhlODk3ZjQiLCJjbGllbnRfaWQiOiIyMGNkMDliZC1hOTEzLTRkZjMtYWJlNC0yOTJhMjQyMDMyMGYiLCJlbmRwb2ludCI6IjgyZjQ5Nzk0LTU5NTctNDQwYy04MTU2LTRkZmMwZmYyM2U5OSIsInN1YiI6IjcyZGM2MDg0LTAzYmMtNDFhOS1hZDYzLTE4NzlkMTNjOGYyYyIsImlhdCI6MTczOTQ5NzgzNH0.yr-6lDn6yPR9vpOVfPu_vqJVSfXzeqfyivAaUGp-Fhc",
+          "model_aliases": null,
+          "model_capabilities": [
+            "chat"
+          ],
+          "model_name": "gemma2:2b"
+        },
+        "syslog_drain_url": null,
+        "volume_mounts": []
+      },
+      {
+        "label": "genai",
+        "provider": null,
+        "plan": "nomic-embed-text",
+        "name": "nomic",
+        "tags": [
+          "genai",
+          "llm"
+        ],
+        "instance_guid": "d21efd82-9f1c-45eb-a80a-e327db9e9604",
+        "instance_name": "nomic",
+        "binding_guid": "5d32ca81-0e34-42a8-ae17-ae08b99875b6",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.dhaka.cf-app.com/6dda8877-6b0f-43a9-8191-bad4c239f564/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9.eyJrZXlfaWQiOiIyMjcxYTZlZi02YzI2LTRjYWUtYTQzNy03NTY1NGRlN2U3OTciLCJjbGllbnRfaWQiOiIxOTE2ZjFmNC0wZTBlLTQ0ZmYtOWM0Yi1iYTFhNGNmZDlmNzEiLCJlbmRwb2ludCI6IjZkZGE4ODc3LTZiMGYtNDNhOS04MTkxLWJhZDRjMjM5ZjU2NCIsInN1YiI6IjVkMzJjYTgxLTBlMzQtNDJhOC1hZTE3LWFlMDhiOTk4NzViNiIsImlhdCI6MTczOTQ5Nzg1OX0.QXiIiFTBtDHJA58eO_PVoH-nX80Cy_Fnemy0XuLGGt4",
+          "model_aliases": null,
+          "model_capabilities": [
+            "embedding"
+          ],
+          "model_name": "nomic-embed-text"
+        },
+        "syslog_drain_url": null,
+        "volume_mounts": []
+      }
+    ]
+  }
