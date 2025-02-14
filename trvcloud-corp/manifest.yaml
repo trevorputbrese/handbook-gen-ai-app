@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: trvcloud-handbook-genai
+  - name: trvcloud-handbook
     memory: 256M
     instances: 1
     buildpacks:

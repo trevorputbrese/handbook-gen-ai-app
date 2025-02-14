@@ -27,23 +27,23 @@ Welcome to the **TRVCloud Employee Handbook**. This document outlines our polici
   - [Corporate Email](#corporate-email)
   - [Social Media](#social-media)
 - [Employee Relationships](#employee-relationships)
-- [Compensation & Development](#compensation--development)
+- [Compensation and Development](#compensation-and-development)
   - [Compensation Status](#compensation-status)
   - [Overtime](#overtime)
   - [Payroll](#payroll)
   - [Performance Management](#performance-management)
 - [Benefits and Perks](#benefits-and-perks)
   - [Employee Health](#employee-health)
-  - [Workers’ Compensation](#workers-compensation)
+  - [Workers Compensation](#workers-compensation)
   - [Work from Home](#work-from-home)
   - [Remote Working](#remote-working)
   - [Employee Expenses](#employee-expenses)
   - [Company Car](#company-car)
   - [Parking](#parking)
   - [Company-Issued Equipment](#company-issued-equipment)
-- [Time & Leave](#time--leave)
+- [Time and Leave](#time-and-leave)
   - [Working Hours](#working-hours)
-  - [Paid Time Off (PTO)](#paid-time-off-pto)
+  - [Paid Time Off](#paid-time-off)
   - [Holidays](#holidays)
   - [Sick Leave](#sick-leave)
   - [Long-Term Illness](#long-term-illness)
@@ -66,13 +66,10 @@ At TRVCloud, we strive to maintain a **supportive and professional work environm
 - We encourage **diversity, inclusion, and equal opportunities** for all employees.
 - We expect employees to **act professionally and with integrity**.
 - We commit to **maintaining fair and transparent policies** for all aspects of employment.
-- TEST POLICY:  We commit to playing every employee a huge bonus at Holloween and Easter.
 
 ---
 
-
 ## **Employment Basics**
-
 
 ### **Employment Contract Types**
 - **Full-time employees** work at least **30 hours per week** or **130 hours per month**.
@@ -110,14 +107,6 @@ Hiring includes:
 - Employees can refer **qualified candidates**.
 - Successful referrals may earn a **$3,000 referral bonus**.
 - Referral incentives **increase for hard-to-fill positions**.
-<<<<<<< Updated upstream
-- Upon second referral employees to be given $1,000,000
-- Upon third referral employees to be given a coupon for a free McChicken.
-- Upon 4th referral employees get a free coupon for a massage.
-=======
-- Upon second referral the employee is eligible for a free McChicken coupon.
-- Upon 3rd referral employees will get a $1,000,000
->>>>>>> Stashed changes
 
 ---
 

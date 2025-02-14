@@ -1,0 +1,109 @@
+VCAP_SERVICES: {
+    "genai": [
+      {
+        "binding_guid": "b698e7af-c71a-41b3-885d-72c807c43129",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.techbrese.com/61711777-2e5c-412b-a4f9-36f8f3ec1c7e/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiJmNmJkNjA2MC1lOTE4LTRiNTctOTBjYS02M2ExMDljMGNlY2EiLCJrZXlfaWQiOiI4MTM2NGQyMy05YjZkLTQ4OWQtYjk4ZS0zZDg1MzdhZjBhMDAiLCJlbmRwb2ludCI6IjYxNzExNzc3LTJlNWMtNDEyYi1hNGY5LTM2ZjhmM2VjMWM3ZSIsInN1YiI6ImI2OThlN2FmLWM3MWEtNDFiMy04ODVkLTcyYzgwN2M0MzEyOSIsImlhdCI6MTczOTM5MzY2M30.wd2jhzxx1Is7ZbzArnqvKMFUs3MgtWmafOnpezX3kBY",
+          "model_aliases": null,
+          "model_capabilities": [
+            "embedding"
+          ],
+          "model_name": "nomic-embed-text",
+          "wire_format": "openai"
+        },
+        "instance_guid": "16517cfb-74e5-45d4-bd22-b061077fa32b",
+        "instance_name": "nomic",
+        "label": "genai",
+        "name": "nomic",
+        "plan": "nomic-embed-text",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": [
+          "genai",
+          "llm"
+        ],
+        "volume_mounts": []
+      },
+      {
+        "binding_guid": "320b7860-0f8a-4c61-8c3c-bc61e9e49afa",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.techbrese.com/ccad57f2-d61b-41a5-a557-881fc5839716/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfaWQiOiIxNjg2ZDJjOC0zZTdkLTQ3YjktOGIzZS1jNzk5MDJiNTg1MjUiLCJrZXlfaWQiOiI4OTExMTE4Mi1kMThkLTRmYjEtODViYS0zZDNiMDI4MmNmY2IiLCJlbmRwb2ludCI6ImNjYWQ1N2YyLWQ2MWItNDFhNS1hNTU3LTg4MWZjNTgzOTcxNiIsInN1YiI6IjMyMGI3ODYwLTBmOGEtNGM2MS04YzNjLWJjNjFlOWU0OWFmYSIsImlhdCI6MTczOTM5MzY2M30.oMeYc8-GBdbOI0CxiB8imrTcA_r6JBSFLCEm_vjW4GI",
+          "model_aliases": null,
+          "model_capabilities": [
+            "chat"
+          ],
+          "model_name": "gemma2:2b",
+          "wire_format": "openai"
+        },
+        "instance_guid": "37dee401-2be5-4705-8cb0-129784d31e1f",
+        "instance_name": "gemma2",
+        "label": "genai",
+        "name": "gemma2",
+        "plan": "gemma2:2b",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": [
+          "genai",
+          "llm"
+        ],
+        "volume_mounts": []
+      }
+    ],
+    "postgres": [
+      {
+        "binding_guid": "0a75ecd8-c90f-4996-ae3b-ee5f7532953d",
+        "binding_name": null,
+        "credentials": {
+          "db": "postgres",
+          "hosts": [
+            "q-s0.postgres-instance.services.service-instance-2a374240-c8de-4b5a-b19e-88f5b5ab7315.bosh"
+          ],
+          "jdbcUrl": "jdbc:postgresql://q-s0.postgres-instance.services.service-instance-2a374240-c8de-4b5a-b19e-88f5b5ab7315.bosh:5432/postgres?user=pgadmin&password=4VLY1z750wCSl6329gx8",
+          "password": "4VLY1z750wCSl6329gx8",
+          "port": 5432,
+          "uri": "postgresql://pgadmin:4VLY1z750wCSl6329gx8@q-s0.postgres-instance.services.service-instance-2a374240-c8de-4b5a-b19e-88f5b5ab7315.bosh:5432/postgres",
+          "user": "pgadmin"
+        },
+        "instance_guid": "2a374240-c8de-4b5a-b19e-88f5b5ab7315",
+        "instance_name": "postgres",
+        "label": "postgres",
+        "name": "postgres",
+        "plan": "on-demand-postgres-db-small",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": [
+          "postgres",
+          "pivotal",
+          "on-demand"
+        ],
+        "volume_mounts": []
+      }
+    ]
+  }
+  
+  
+  VCAP_APPLICATION: {
+    "application_id": "279587c2-dafc-4eb3-8606-e4b4cfb31e31",
+    "application_name": "trvcloud-handbook-genai",
+    "application_uris": [
+      "trvcloud-handbook-genai.apps.techbrese.com"
+    ],
+    "cf_api": "https://api.sys.techbrese.com",
+    "limits": {
+      "fds": 16384
+    },
+    "name": "trvcloud-handbook-genai",
+    "organization_id": "b4a74878-f990-4aa2-bff0-190877c0334a",
+    "organization_name": "tanzu-public-sector-team",
+    "space_id": "5f5f7a70-0b55-4ea1-bf94-b844ee3fcb1b",
+    "space_name": "tputbrese",
+    "uris": [
+      "trvcloud-handbook-genai.apps.techbrese.com"
+    ],
+    "users": null
+  }
+  

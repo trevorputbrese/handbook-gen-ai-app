@@ -1,0 +1,79 @@
+{
+    "genai": [
+      {
+        "binding_guid": "2e3aa6a6-1b7c-4751-b875-136d8ef297b7",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.techbrese.com/61711777-2e5c-412b-a4f9-36f8f3ec1c7e/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9...",
+          "model_aliases": null,
+          "model_capabilities": ["embedding"],
+          "model_name": "nomic-embed-text",
+          "wire_format": "openai"
+        },
+        "instance_guid": "16517cfb-74e5-45d4-bd22-b061077fa32b",
+        "instance_name": "nomic",
+        "label": "genai",
+        "name": "nomic",
+        "plan": "nomic-embed-text",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": ["genai", "llm"],
+        "volume_mounts": []
+      },
+      {
+        "binding_guid": "df06fa66-5ad2-4c10-9eb6-fe710caee60e",
+        "binding_name": null,
+        "credentials": {
+          "api_base": "https://genai-proxy.sys.techbrese.com/ccad57f2-d61b-41a5-a557-881fc5839716/openai",
+          "api_key": "eyJhbGciOiJIUzI1NiJ9...",
+          "model_aliases": null,
+          "model_capabilities": ["chat"],
+          "model_name": "gemma2:2b",
+          "wire_format": "openai"
+        },
+        "instance_guid": "37dee401-2be5-4705-8cb0-129784d31e1f",
+        "instance_name": "gemma2",
+        "label": "genai",
+        "name": "gemma2",
+        "plan": "gemma2:2b",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": ["genai", "llm"],
+        "volume_mounts": []
+      }
+    ],
+    "postgres": [
+      {
+        "binding_guid": "2d4919d6-df32-4f58-bc03-058fe77492c9",
+        "binding_name": null,
+        "credentials": {
+          "db": "postgres",
+          "hosts": [
+            "q-s0.postgres-instance.services.service-instance-3549f25b-67dc-4c02-955b-dd85bcefa883.bosh"
+          ],
+          "jdbcUrl": "jdbc:postgresql://q-s0.postgres-instance.services.service-instance-3549f25b-67dc-4c02-955b-dd85bcefa883.bosh:5432/postgres?user=pgadmin&password=1z5e04dc9W2b6q8w3Zj7",
+          "password": "1z5e04dc9W2b6q8w3Zj7",
+          "port": 5432,
+          "service_gateway": {
+            "host": "tcp.techbrese.net",
+            "jdbcUrl": "jdbc:postgresql://tcp.techbrese.net:1024/postgres?user=pgadmin&password=1z5e04dc9W2b6q8w3Zj7",
+            "port": 1024,
+            "uri": "postgresql://pgadmin:1z5e04dc9W2b6q8w3Zj7@tcp.techbrese.net:1024/postgres"
+          },
+          "uri": "postgresql://pgadmin:1z5e04dc9W2b6q8w3Zj7@q-s0.postgres-instance.services.service-instance-3549f25b-67dc-4c02-955b-dd85bcefa883.bosh:5432/postgres",
+          "user": "pgadmin"
+        },
+        "instance_guid": "3549f25b-67dc-4c02-955b-dd85bcefa883",
+        "instance_name": "postgres",
+        "label": "postgres",
+        "name": "postgres",
+        "plan": "on-demand-postgres-small",
+        "provider": null,
+        "syslog_drain_url": null,
+        "tags": ["postgres", "pivotal", "on-demand"],
+        "volume_mounts": []
+      }
+    ]
+  }
+  

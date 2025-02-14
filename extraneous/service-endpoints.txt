@@ -1,0 +1,15 @@
+LLM_API_BASE
+LLM_GENERATE_ENDPOINT = LLM_API_BASE
+LLM_API_KEY 
+
+EMBEDDING_API_BASE
+EMBEDDING_ENDPOINT = EMBEDDING_API_BASE
+EMBEDDING_API_KEY
+
+DB_URL = postgres_creds.get('uri')
+
+   conn = psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS
