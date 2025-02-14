@@ -6,13 +6,30 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* Example inline styles for a hero section */
+    .hero {
+      background: url('{{ url_for("static", filename="hero-bg.jpg") }}') no-repeat center center;
+      background-size: cover;
+      color: #fff;
+      padding: 100px 0;
+    }
+    .hero-overlay {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 50px 0;
+    }
+  </style>
 </head>
 <body>
   <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
       <a class="navbar-brand" href="{{ url_for('landing') }}">TRVCloud Intranet</a>
-      <div class="collapse navbar-collapse">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('handbook') }}">Employee Handbook</a>
@@ -27,14 +44,59 @@
       </div>
     </div>
   </nav>
-  
-  <!-- Main Content -->
-  <div class="container mt-5 text-center">
-    <h1>Welcome to TRVCloud Intranet</h1>
-    <p class="lead">Please use the navigation bar above to explore the site.</p>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-overlay">
+      <div class="container text-center">
+        <h1 class="display-4">Welcome to TRVCloud Intranet</h1>
+        <p class="lead">Your one-stop resource for all employee policies, interactive AI assistance, and more.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a href="{{ url_for('handbook') }}" class="btn btn-lg btn-primary">View Handbook</a>
+          <a href="{{ url_for('chatbot') }}" class="btn btn-lg btn-secondary">Chat with Our Bot</a>
+        </div>
+      </div>
+    </div>
   </div>
-  
-  <!-- Bootstrap JS -->
+
+  <!-- Features Section -->
+  <div class="container my-5">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <div class="card border-0">
+          <div class="card-body">
+            <h5 class="card-title">Up-to-Date Handbook</h5>
+            <p class="card-text">Easily access and update employee policies.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0">
+          <div class="card-body">
+            <h5 class="card-title">AI Chatbot Assistance</h5>
+            <p class="card-text">Ask questions and get immediate, context-aware answers.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-0">
+          <div class="card-body">
+            <h5 class="card-title">Interactive Platform</h5>
+            <p class="card-text">Stay informed and engaged with our modern intranet portal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer (optional) -->
+  <footer class="bg-light py-3">
+    <div class="container text-center">
+      <small>&copy; 2025 TRVCloud. All Rights Reserved.</small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

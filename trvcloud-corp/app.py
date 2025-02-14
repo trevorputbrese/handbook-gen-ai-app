@@ -271,7 +271,7 @@ def api_chat():
         f"{llm_api_base}/chat/completions",
         json=payload,
         headers=headers,
-        timeout=30
+        timeout=40
     )
     print("LLM API response:", ollama_response.status_code, ollama_response.text)
 
