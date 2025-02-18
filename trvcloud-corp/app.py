@@ -91,7 +91,7 @@ def chunk_text(text, chunk_size=500):
 def get_embedding(text):
     payload = {
         "input": text,
-        "model": embeddings_api_name  # This variable comes from your CF environment.
+        "model": embeddings_api_name  # This variable comes from the CF environment.
     }
     headers = {
         "Content-Type": "application/json",
@@ -236,7 +236,6 @@ def update_handbook():
 
 @app.route('/chatbot')
 def chatbot():
-    # Placeholder for the chatbot interface
     return render_template('chatbot.html')
 
 @app.route('/api/chat', methods=['POST'])
