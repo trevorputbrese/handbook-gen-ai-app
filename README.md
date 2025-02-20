@@ -27,9 +27,9 @@ The app will automatically bind to the provisioned services. The code reads the 
 ### Local Development Setup
 
 1. **Prerequisites**  
-   To run the app locally, you will need:
-   - **Ollama** running with the **nomic-embed-text** model (for embeddings) and **gemma2:2b** model (for LLM)
-   - **Postgres** with the **PGVector** extension
+   To run the app locally, you will need two AI models and a Postgres DB:
+   - **Models** Download Ollama to run an embeddings model and an LLM.  I recommend the **nomic-embed-text** model for embeddings.  **gemma2:2b** model has worked well as an LLM for the chatbot interface.  I have not tried this yet with other models.
+   - **Postgres** with the **PGVector** extension.  There's a hundred ways to run Postgres locally, but I took the easy path and just ran: `docker pull ankane/pgvector`
 
 2. **Clone the Repository and Install Dependencies**
    ```bash
@@ -57,21 +57,30 @@ The app will automatically bind to the provisioned services. The code reads the 
      ```bash
      DATABASE_URL=postgresql://postgres:postgres@localhost:5432/trvcloud
      ```
-
-5. **Run the App Locally**
-   ```bash
-   python techbrese_intranet.py
-   ```
-   The app will be available at [http://127.0.0.1:5000](http://127.0.0.1:5000).
-
-6. **Database Schema Initialization**
+5. **Database Schema Initialization**
 
 The app includes an **init_db.py** script to automatically initialize the database schema when running in Cloud Foundry.  When running the app locally you'll have to initialize it yoruself:
 To initialize the database:
 ```bash
 python init_db.py
 ```
-This script creates the necessary schema so you do not need to run any manual SQL commands.
+This script creates the necessary schema so you do not need to run any manual SQL commands.  If it doesn't work you can also just run:
+
+   ```CREATE EXTENSION vector;
+
+   CREATE TABLE IF NOT EXISTS handbook_chunks (
+    id SERIAL PRIMARY KEY,
+    chunk_text TEXT NOT NULL,
+    embedding VECTOR(768)
+   ```
+
+6. **Run the App Locally**
+```bash
+python techbrese_intranet.py
+```
+The app will be available at [http://127.0.0.1:5000](http://127.0.0.1:5000).
+
+
 
 ## How It Works
 
