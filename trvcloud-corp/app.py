@@ -104,7 +104,8 @@ def get_embedding(text):
     response = requests.post(
         f"{embeddings_api_base}/embeddings",  # Using the CF-provided embeddings endpoint.
         json=payload,
-        headers=headers
+        headers=headers,
+        verify=False
     )
     
     # Debug print: Show raw response status and text.
@@ -270,7 +271,8 @@ def api_chat():
         f"{llm_api_base}/chat/completions",
         json=payload,
         headers=headers,
-        timeout=40
+        timeout=40,
+        verify=False
     )
     print("LLM API response:", ollama_response.status_code, ollama_response.text)
 
