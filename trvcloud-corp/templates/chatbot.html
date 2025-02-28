@@ -66,78 +66,110 @@
   <script>
     // Helper function to load chat history from localStorage
     function loadChatHistory() {
-      const history = localStorage.getItem('chatHistory');
-      if (history) {
-        return JSON.parse(history);
-      }
-      return [];
+        const history = localStorage.getItem('chatHistory');
+        if (history) {
+            return JSON.parse(history);
+        }
+        return [];
     }
-  
+
     // Helper function to save chat history to localStorage
     function saveChatHistory(history) {
-      localStorage.setItem('chatHistory', JSON.stringify(history));
+        localStorage.setItem('chatHistory', JSON.stringify(history));
     }
-  
+
     // Helper function to add a message to the chat window and update history
     function addMessage(role, text) {
-      const chatWindow = document.getElementById('chat-window');
-  
-      // Create a new message element
-      const messageElem = document.createElement('div');
-      messageElem.className = 'message ' + role;
-      // Prefix with "You:" for user messages and "Bot:" for bot messages.
-      messageElem.innerText = (role === 'user' ? 'You: ' : 'Bot: ') + text;
-      chatWindow.appendChild(messageElem);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-  
-      // Update the localStorage chat history
-      let history = loadChatHistory();
-      history.push({ role: role, text: text });
-      saveChatHistory(history);
+        const chatWindow = document.getElementById('chat-window');
+
+        // Create a new message element
+        const messageElem = document.createElement('div');
+        messageElem.className = 'message ' + role;
+        // Prefix with "You:" for user messages and "Bot:" for bot messages
+        messageElem.innerText = (role === 'user' ? 'You: ' : 'Bot: ') + text;
+        chatWindow.appendChild(messageElem);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        // Update the localStorage chat history
+        let history = loadChatHistory();
+        history.push({ role: role, text: text });
+        saveChatHistory(history);
     }
-  
+
     // On page load, restore the chat history
     document.addEventListener('DOMContentLoaded', function() {
-      const chatWindow = document.getElementById('chat-window');
-      const history = loadChatHistory();
-      history.forEach(msg => {
-        const messageElem = document.createElement('div');
-        messageElem.className = 'message ' + msg.role;
-        messageElem.innerText = (msg.role === 'user' ? 'You: ' : 'Bot: ') + msg.text;
-        chatWindow.appendChild(messageElem);
-      });
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+        const chatWindow = document.getElementById('chat-window');
+        const history = loadChatHistory();
+        history.forEach(msg => {
+            const messageElem = document.createElement('div');
+            messageElem.className = 'message ' + msg.role;
+            messageElem.innerText = (msg.role === 'user' ? 'You: ' : 'Bot: ') + msg.text;
+            chatWindow.appendChild(messageElem);
+        });
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     });
-  
+
+    // Async function to handle sending messages to the server with retry logic
+    async function sendMessage(message) {
+        const url = '{{ url_for("api_chat") }}';
+        let attempts = 0;
+        const maxAttempts = 2; // Try once, then retry once if it fails
+
+        while (attempts < maxAttempts) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const botReply = data.response || JSON.stringify(data);
+                addMessage('bot', botReply);
+                return; // Success, exit the function
+            } catch (error) {
+                attempts++;
+                console.error(`Attempt ${attempts} failed:`, error);
+
+                if (attempts === maxAttempts) {
+                    // Final failure after retries
+                    const userMessage = error.message.includes('Failed to fetch')
+                        ? 'Error: Connection lost. Please refresh the page.'
+                        : `Error: ${error.message}`;
+                    addMessage('bot', userMessage);
+                } else {
+                    // Wait 1 second before retrying
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+        }
+    }
+
+    // Handle form submission
     document.getElementById('chat-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const inputElem = document.getElementById('chat-input');
-      const message = inputElem.value.trim();
-      if (!message) return;
-  
-      // Add user's message to chat window and localStorage
-      addMessage('user', message);
-      
-      // Clear the input field
-      inputElem.value = '';
-  
-      // Send the message to our Flask chat API endpoint
-      fetch('{{ url_for("api_chat") }}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message })
-      })
-      .then(response => response.json())
-      .then(data => {
-          // Assume the response contains a key 'response' with the bot's reply
-          const botReply = data.response || JSON.stringify(data);
-          addMessage('bot', botReply);
-      })
-      .catch(error => {
-          addMessage('bot', 'Error: ' + error);
-      });
+        e.preventDefault();
+        const inputElem = document.getElementById('chat-input');
+        const message = inputElem.value.trim();
+        if (!message) return;
+
+        // Add user's message to chat window and localStorage
+        addMessage('user', message);
+
+        // Clear the input field
+        inputElem.value = '';
+
+        // Send the message to the server
+        sendMessage(message).catch(error => {
+            // This catch is a fallback in case the async function itself fails unexpectedly
+            console.error('Unexpected error in sendMessage:', error);
+            addMessage('bot', 'Error: Something went wrong. Please try again.');
+        });
     });
-  </script>
+</script>
   
   
   <!-- Bootstrap JS Bundle -->

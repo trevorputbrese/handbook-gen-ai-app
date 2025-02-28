@@ -32,6 +32,7 @@
   </nav>
   <div class="container mt-5">
     <h1>Edit Employee Handbook</h1>
+    <h7>Update the handbook and ask the chatbot about the latest employee policies.  (note: handbook content below is composed in Markdown.)</h7>
     <form action="{{ url_for('update_handbook') }}" method="POST">
       <div class="mb-3">
         <textarea class="form-control" name="handbook_content" rows="20">{{ content }}</textarea>
