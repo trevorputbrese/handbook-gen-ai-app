@@ -127,7 +127,7 @@ def update_embeddings(text):
 
     try:
         # Use the new POSTGRES_URL variable directly
-        conn = psycopg2.connect(POSTGRES_URL)
+        conn = psycopg2.connect(POSTGRES_URL, sslmode='disable')
     except Exception as e:
         print("Error connecting to Postgres:", e)
         return
@@ -175,7 +175,7 @@ def retrieve_context(query, top_n=5):
     query_embedding = get_embedding(query)
     
     # Connect to the Postgres database using the POSTGRES_URL variable.
-    conn = psycopg2.connect(POSTGRES_URL)
+    conn = psycopg2.connect(POSTGRES_URL, sslmode='disable')
     cur = conn.cursor()
     
     # Use PGVector's similarity operator (<->) to retrieve the most similar chunks.
