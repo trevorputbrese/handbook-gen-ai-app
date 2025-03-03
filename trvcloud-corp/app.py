@@ -115,7 +115,7 @@ def get_embedding(text):
         data = response.json()
         embedding = data["data"][0]["embedding"]
         # Debug print: Show the embedding that was returned.
-        print("Returned embeddings -- no need to print out embeddings")
+        print("Returned embeddings:" embedding)
         return embedding
     else:
         raise Exception(f"Embedding API error: {response.status_code} {response.text}")
